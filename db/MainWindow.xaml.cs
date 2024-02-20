@@ -45,5 +45,36 @@ namespace db
         {
 
         }
+
+        private void insertData(string Name)
+        {
+            using (var conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                var command = new SQLiteCommand($"INSERT INTO {tableName} (name) " + $"VALUES ('{Name})", conn);
+                command.ExecuteNonQuery();
+            }
+        }
+
+
+        private List<string> GetData()
+        {
+            List<string> Data = new List<string>();
+
+            using (var conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                var command = new SQLiteCommand($"SELECT * FROM {tableName}", conn);
+                using (var reader = command.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        Data.Add(reader["name"].ToString());
+                    }
+                }
+            }
+
+            return Data;    
+        }
     }
 }
