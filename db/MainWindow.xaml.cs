@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -24,20 +25,21 @@ namespace db
     {
 
         const string dbFile = "C:\\Temp/char/data.db";
-        const string tableName = "MyTable";
-        const string connectionString = "Data Source=" + dbFile + ";Version=3";
+        const string tableName = "Film";
+        const string connectionString = @"Data Source=alaska;Initial Catalog=21IA08_CHAROUZ;Integrated Security=true";
         public MainWindow()
         {
             InitializeComponent();
             inntDB();
+            refreshData();
         }
 
         private void inntDB()
         {
-            using (var conn = new SQLiteConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                var command = new SQLiteCommand($"CREATE TABLE IF NOT EXISTS {tableName} " + $"(Id INTEGER PRIMARY KEY,name TEXT)", conn);
+                var command = new SqlCommand($"CREATE TABLE IF NOT EXISTS {tableName} " + $"(Id INTEGER PRIMARY KEY,name TEXT)", conn);
                 command.ExecuteNonQuery();
             }
         }
@@ -71,10 +73,10 @@ namespace db
         {
             List<string> Data = new List<string>();
 
-            using (var conn = new SQLiteConnection(connectionString))
+            using (var conn = new  SqlConnection(connectionString))
             {
                 conn.Open();
-                var command = new SQLiteCommand($"SELECT * FROM {tableName}", conn);
+                var command = new SqlCommand($"SELECT * FROM {tableName}", conn);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
